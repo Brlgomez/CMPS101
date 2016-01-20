@@ -1,0 +1,51 @@
+/*
+ * Armando Silva, asilva3@ucsc.edu
+ * Brandon Gomez, brlgomez@ucsc.edu
+ * CS 101- Spring 2014- Assignment #4
+ * The List.c file is the method used in hashdr
+ */
+#include "List.h"
+#include "myinclude.h"
+#include <stdlib.h>
+#include <stdio.h>
+
+/*
+ * The node struct has a data, next, and prev
+ * pointer. Has a Listhandle for the bookIDs
+ */
+typedef struct NodeStruct{
+  void* data;
+  struct NodeStruct* next;
+  struct NodeStruct* prev;
+  ListHndl bookid;
+}NodeStruct;
+
+/*Creates my List struct*/
+typedef struct ListStruct{
+  NodePtr first;
+  NodePtr current;
+  NodePtr last;
+  int size;
+}ListStruct;
+
+/*The method newNode() initializes and returns
+ * a new node "object"*/
+NodePtr newNode(void* newdata)
+{
+  NodePtr newNode = malloc(sizeof(NodeStruct));
+  newNode->data = newdata;
+  newNode->next = NULL;
+  newNode->prev = NULL;
+  newNode->bookid = NULL;
+  return newNode;
+}
+
+NodePtr newbook(void* newdata, ListHndl bookid)
+{
+  NodePtr newNode = malloc(sizeof(NodeStruct));
+  newNode->data = newdata;
+  newNode->next = NULL;
+  newNode->prev = NULL;
+  newNode->bookid = bookid;
+  return newNode;
+}

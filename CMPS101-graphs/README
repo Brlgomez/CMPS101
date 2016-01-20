@@ -1,0 +1,40 @@
+Brandon Gomez
+brlgomez@ucsc.edu
+
+Dylan Ma
+dylma@ucsc.edu
+
+Assignment 5:
+	   graph.c
+	   graph.h
+	   List.h
+	   myinclude.h
+	   graphDr.c
+	   List.c
+	   store.c
+	   README
+	   Makefile
+
+Makefile:
+	Compiles all c files for this assignment on Unix
+
+graph.c:
+	Implementation file for the Graph ADT.
+
+graph.h:
+	A header (.h)  file
+
+List.h:
+	Header (.h) file for List ADT
+
+myinclude.h:
+	A header (.h) file
+
+graphDr.c:
+	A Driver program to test Graph.c to see how it functions
+
+List.c:
+	C file for List.h
+
+store.c:
+	Contains our main function

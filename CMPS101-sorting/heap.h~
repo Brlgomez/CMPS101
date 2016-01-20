@@ -1,0 +1,16 @@
+
+typedef struct heapStruct * heapHndl;
+
+heapHndl newHeap (int maxSize); 
+
+void freeHeap (heapHndl H);
+
+Boolean isFull(heapHndl H);
+
+Boolean isEmpty(heapHndl H);
+
+int maxValue(heapHndl H);
+
+void deleteMax(heapHndl H);
+
+void insert(heapHndl H, int priority);

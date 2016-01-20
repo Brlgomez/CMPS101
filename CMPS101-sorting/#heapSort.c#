@@ -1,0 +1,31 @@
+#include "myinclude.h"
+#include "heapSort.h"
+#include "heap.h"
+
+/* 
+     n = number of elements in A;
+     H = newHeap(n);
+     for each element x in A
+           insert(H, x);
+     for i=ndownto1do
+         SortedA[i] = maxValue(H);
+         deleteMax(H);
+*/
+
+void heapSort(int keys[], int numKeys)
+{
+  int i;
+  int n = numKeys;
+  heapHndl heap = newHeap(n);
+  for(i = 0; i < n; i++)
+    {
+      insert(heap, keys[i]);
+    }
+  for(i = n; i >= 1; i--)
+    {
+      int max = maxValue(heap);
+      keys[i] = max;
+      deleteMax(heap);
+    }
+  /*freeHeap(heap);*/
+}

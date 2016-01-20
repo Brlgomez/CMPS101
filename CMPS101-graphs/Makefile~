@@ -1,0 +1,17 @@
+store : store.o graph.o List.o
+	gcc -ansi -Wall -Wextra -pedantic -o store store.o graph.o List.o
+
+graphDr : graphDr.o graph.o List.o 
+	gcc -ansi -Wall -Wextra -pedantic -o graphDr graphDr.o graph.o List.o 
+
+store.o : store.c graph.h List.h
+	gcc -c -ansi -Wall -Wextra -pedantic -g -c store.c
+
+graphDr.o : graphDr.c graph.h List.h
+	gcc -c -ansi -Wall -Wextra -pedantic -g -c graphDr.c
+
+graph.o : graph.c graph.h List.h 
+	gcc -c -ansi -Wall -Wextra -pedantic -g -c graph.c
+
+list.o : List.h List.c
+	gcc -c -ansi -Wall -Wextra -pedantic -g -c List.c

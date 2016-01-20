@@ -1,0 +1,44 @@
+Program by Brandon Gomez brlgomez@ucsc.edu
+README file for heap ADT
+
+The heap ADT contains the following files:
+README.txt ------ This documentation file
+heap.c ---------- The heap ADT
+heap.h ---------- The user access to the ADT
+heapDr.c -------- The heap Driver to test heap.c using the heap.h header
+heapSort.c ------ Sorts array by heap sort
+heapSort.h ------ The header file for heapSort.c
+insertionSort.c - Sorts the array by insertion sort
+insertionSort.h - The header file for insertionSort.c
+myinclude.h ----- Some C defines I use
+sortComp.c ------ Tell time spent sorting an array using insertion and heap sort
+sortPrint.c ----- Prints all the contents in order using insertion and heap sort
+Makefile -------- compliles all the files and make three executables: heapDr, sortPrint and sortComp
+
+Experiments:
+This the length of time it takes to sort using the heap sort and insertion sort method.
+
+10 items:
+
+insertion sort: 0.00000 seconds
+heap sort: 0.00000 seconds
+
+100 items:
+
+insertion sort: 0.00000 seconds 
+heap sort: 0.00000 seconds
+
+1000 items:
+
+insertion sort: 0.00000 seconds
+heap sort: 0.00000 seconds
+
+50000 items:
+
+insertion sort: 2.46666 seconds 
+heap sort: 0.02000 seconds
+
+100000 items:
+
+insertion sort: 
+heap sort:

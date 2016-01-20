@@ -1,0 +1,203 @@
+/******************************
+ * By: Brandon Gomez (brlgomez)
+ *     Dylan Ma (dylma)
+ *****************************/
+
+/* 
+ *     Source code (.c) file for the graph ADT
+ *
+ * This contains the implementation of the operations and types 
+ * exported by the graph.h file.
+ * Uses implementations of the list ADT using list.h
+ */
+
+#include <stdio.h>
+#include <stdlib.h>
+#include <assert.h>
+#include "List.h"
+
+#define WHITE 0
+#define GREY 1
+#define BLACK 2
+#define INFINITY 1.0/0.0
+
+typedef struct GraphStruct
+{
+  ListHndl *verts;
+  int numVerts;
+  int numEdges;
+  int *color;
+  int *parent;
+  int *distance;
+} *Graph;
+
+/*
+ * creates a new graph with n vertices numbered 
+ * 0 to n - 1 and no edges and returns a handle to it.
+ */
+
+Graph newGraph(int n)
+{
+  int i = 0;
+  Graph G = malloc(sizeof(struct GraphStruct));
+  G->verts = calloc(n, sizeof(ListHndl));
+  G->numVerts = 0;
+  G->numEdges = 0;
+  G->color = calloc(n, sizeof(int));
+  G->parent = calloc(n, sizeof(ListHndl));
+  G->distance = calloc(n, sizeof(int));
+  for(i = 0; i < n; i++)
+    {
+      G->verts[i] = newList();
+      G->numVerts = G->numVerts + 1;
+      G->color[i] = WHITE;
+      G->parent[i] = NULL;
+      G->distance[i] = INFINITY;
+    }
+  return G;
+}
+
+/*
+ * adds the edge (from, to) to the graph.
+ */
+
+void addEdge(Graph G, int from, int to)
+{
+  insertAtBack(G->verts[from], to);
+  G->numEdges = G->numEdges + 1;
+}
+
+/*
+ * frees the storage used by a no longer needed 
+ * Graph ADT object.
+ */
+
+void freeGraph(Graph* G){
+  if (G == NULL || (*G) == NULL){
+    return;
+  }
+
+  int i;
+  for (i = 1; i <= graphORder(*G); ++i){
+    freeList(&((*G)->verts[i]));
+  }  
+  free((*G)->verts);
+  free((*G)->color);
+  free((*G)->parent);
+  free((*G)->distance);
+  free(*G);
+  *G = NULL;
+  /* proper free */
+}
+
+int graphOrder(Graph G){
+  if (G == NULL){
+    exit(1);
+  }
+  
+  return (G->numVerts);
+}
+
+/*
+ * performs BFS and updates the graph’s parent and distance 
+ * arrays. This will erase the results of any previous BFS.
+ */
+
+void doBFS(Graph G, int source)
+{
+  assert(G->numVerts != 0);
+  ListHndl L = newList();
+  /*printf("start %d\n", source);*/
+  insertAtBack(L, source);
+  int i = 0;
+  for(i = 0; i < G->numVerts; i++)
+    {
+      G->color[i]= WHITE;
+      G->parent[i] = NULL;
+      G->distance[i] = INFINITY;
+    }
+  G->color[source] = GREY;
+  G->parent[source] = NULL;
+  G->distance[source] = 0;
+  while(!isEmpty(L))
+    {
+      int u = getFirst(L);
+      /*printf("u: %d\n", u);*/
+      if(u > G->numVerts)
+	{
+	  deleteFirst(L);
+	  break;
+	}
+      ListHndl v = G->verts[u];
+      int prev;
+      moveFirst(v);
+      while(!offEnd(v))
+	{
+	  int E = getCurrent(v);
+	  if(prev == E)
+	    {
+	      break;
+	    }
+	  /*printf("   v: %d\n", E);*/
+	  if(G->color[E] == WHITE)
+	    {
+	      G->color[E] = GREY;
+	      G->parent[E] = u;
+	      if(G->distance[E] < 0)
+		{
+		  G->distance[E] = 0;
+		}
+	      G->distance[E] = G->distance[u] + 1;
+	      insertAtBack(L, E);
+	    }
+	  prev = E;
+	  moveNext(v);
+	} 
+      deleteFirst(L);
+      G->color[u] = BLACK;
+    }
+}
+
+/*
+ * return the number of edges in the shortest path from the 
+ * last BFS source to the destination. returns NULL if no path.
+ */
+
+int getDistance(Graph G, int destination)
+{
+  assert(G->numVerts != 0);
+  return G->distance[destination];
+}
+
+/*
+ * return a List containing the path from the last doBFS source 
+ * to the destination, or a null pointer if no such path exists.
+ */
+
+ListHndl getPathTo(Graph G, int destination)
+{
+  assert(G->numVerts != 0);
+  int num = destination;
+  ListHndl L = newList();
+  /*insertAtFront(L, num);*/
+  while(num != NULL)
+    {
+      insertAtFront(L, num);
+      num = G->parent[num];
+      /*insertAtFront(L, num);*/
+    }
+  printList(L);
+  return L;
+}
+
+/* for debuging purposes */
+
+void printGraph(Graph G)
+{
+  
+}
+
+void printBFSTree(ListHndl L)
+{
+  
+}

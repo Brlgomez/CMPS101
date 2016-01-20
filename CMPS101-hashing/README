@@ -1,0 +1,15 @@
+Program By Armando Silva, asilva3@ucsc.edu and
+	   Brandon Gomez, brlgomez@ucsc.edu
+
+The Hash ADT contains the following files:
+    README.txt	      This document file
+    hash.c	      The implemtation of the hash ADT
+    hash.h 	      The header file for the hash ADT
+    hashdr.c	      A simple program that test the hash ADT
+    List.c	      The implemtaion of the list ADT
+    List.h	      The header file for the list ADT
+    main.c	      A program that uses the hash and list ADT to store book titles with a repected library ID.
+    Makefile	      A Makefile that compiles all the programs and make two executables: main and hashdr
+    myinclude.h       Contains boolean logic
+
+In order to run the program: main [file] [file]

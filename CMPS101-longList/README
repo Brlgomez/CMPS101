@@ -1,0 +1,15 @@
+Program by Brandon Gomez brlgomez@ucsc.edu
+README file for longList ADT
+NOTE:  use "./store filename" to run the program
+
+The longList ADT contains the following files:
+README.txt    This documentation file
+longList.h    The header file describing the adt operations
+longList.c    The implementation of the longList ADT
+longListDr.c  A simple program that tests out the ADT operations
+myinclude.h   Contains the Boolean logic
+store.c       A program that uses ADT operations to store bookIDs into a
+	        customer doubly linked list
+Makefile      A makefile that complies the module and driver
+	        it makes longList.o, longListDr.o, store.o, store, and a
+ 		longListDr

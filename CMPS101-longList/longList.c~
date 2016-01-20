@@ -1,0 +1,366 @@
+/******************************
+ * By: Brandon Gomez (brlgomez)
+ *****************************/
+
+/* 
+ *     Source code (.c) file for List-of-Longs ADT
+ *
+ * This contains the implementation of the operations and types 
+ * exported by the longList.h file.
+ */
+
+#include "myinclude.h"     /* Some C defines I routinely use */
+#include "longList.h"      /* The ADT header file */
+#include <assert.h>        /* This allows me to use the "assert" macro */
+
+/*
+  The file longList.h contains the following:
+
+  ListHndl newList();
+  void freeList(ListHndl* List);
+  Boolean isEmpty(ListHndl List);
+  Boolean offEnd(ListHndl List);
+  Boolean atFirst(ListHndl List);
+  Boolean atLast(ListHndl List);
+  long getFirst(ListHndl List);
+  long getLast(ListHndl List);
+  long getCurrent(ListHndl List);
+  void makeEmpty(ListHndl List);
+  void moveFirst(ListHndl List);
+  void moveLast(ListHndl List);
+  void movePrev(ListHndl List);
+  void moveNext(ListHndl List);
+  void insertAtFront(ListHndl List, long data);
+  void insertAtBack(ListHndl List, long data);
+  void insertBeforeCurrent(ListHndl List, long data);
+  void deleteFirst(ListHndl List);
+  void deleteLast(ListHndl List);
+  void deleteCurrent(ListHndl List);
+  void printList(FILE* out, ListHndl List);
+ */
+
+typedef struct NodeStruct * NodePtr;
+
+/* doubly-linked list */
+typedef struct NodeStruct 
+{
+  long data;        /* This of the data */
+  struct NodeStruct* next;
+  struct NodeStruct* prev;
+} NodeStruct;
+
+/* points to NodeStruct */
+typedef struct ListStruct 
+{
+  int size;
+  NodePtr first;
+  NodePtr last;
+  NodePtr current;
+} ListStruct;
+
+NodePtr FreeList;
+int NumLists = 0;  /* This keeps track of the number of active lists */
+
+/*** Constructors-Destructors ***/
+
+ListHndl newList()
+{
+  ListHndl newList;
+  newList = malloc(sizeof(ListStruct));
+  newList->size = 0;
+  newList->first = NULL;
+  newList->last = NULL;
+  NumLists++;
+  return(newList);
+}
+
+void freeList(ListHndl* List)
+{
+  assert ((*List) != NULL); 
+  
+  free ((*List));
+  (*List) = NULL;
+  NumLists--;
+  
+  if(NumLists == 0) { free(List); }
+}
+
+/*** Access functions ***/
+
+/* returns true is list is empty else returns false. */
+Boolean isEmpty(ListHndl List)
+{
+  assert(List != NULL);
+  
+  return (List->size == 0);
+}
+
+/* returns true is current == NULL */
+Boolean offEnd(ListHndl List)
+{
+  assert(List != NULL);
+  
+  return(List->current == NULL);
+}
+
+/* returns true if current == first and !offEnd() */
+Boolean atFirst(ListHndl List)
+{
+  assert(List != NULL);
+  
+  return(List->current == List->first && !offEnd(List));
+}
+
+/* returns true if current == last and !offEnd() */
+Boolean atLast(ListHndl List)
+{
+  assert(List != NULL);
+  
+  return(List->current == List->last && !offEnd(List));
+}
+
+/* return the first element; pre: !isEmpty() */
+long getFirst(ListHndl List)
+{
+  assert(List != NULL);
+  assert(!isEmpty(List));
+  
+  return(List->first->data);
+}
+
+/* return the last element; pre: !isEmpty() */
+long getLast(ListHndl List)
+{
+  assert(List != NULL);
+  assert(!isEmpty(List));
+  
+  return(List->last->data);
+}
+
+/* return the current element pre: !offEnd() */
+long getCurrent(ListHndl List)
+{
+  assert(List != NULL);
+  assert(!isEmpty(List));
+  
+  return(List->current->data);
+}
+
+/*** Manipulation procedures ***/
+
+/* delete all elements from the list, */
+/* making it empty. Post: isEmpty(), offEnd() are both true */
+
+void makeEmpty(ListHndl List)
+{
+  while(List->first != NULL)
+    {
+      NodePtr temp = List->first;
+      List->first = List->first->next;
+      free(temp);
+    }
+}
+
+/* without changing list order, make the first element */
+/* the current one.  Pre: !isEmpty(); Post: !offEnd() */
+
+void moveFirst(ListHndl List)
+{
+  assert(!isEmpty(List));
+  if(List->first != NULL)
+    {
+      List->current = List->first;
+    }
+}
+
+/* without changing list order, make the last element */
+/* the current one. Pre: !isEmpty(); Post: !offEnd() */
+
+void moveLast(ListHndl List)
+{
+  assert(!isEmpty(List));
+  if(List->last != NULL)
+    {
+      List->current = List->last;
+    }
+}
+
+/* move the current marker one element earlier in the list */
+/* Pre: !offEnd();   Post: offEnd() only if atFirst() was true */
+
+void movePrev(ListHndl List)
+{
+  assert(!isEmpty(List));
+  if(List->current->prev != NULL)
+    {
+      List->current = List->current->prev;
+    }
+}
+
+/* move the current marker one element later in the list. */
+/* Pre: !offEnd();   Post: offEnd() only if atLast() was true. */
+
+void moveNext(ListHndl List)
+{
+  assert(!isEmpty(List));
+  if(List->current->next != NULL)
+    {
+      List->current = List->current->next;
+    }
+}
+
+/* Inserts new element before first */
+/* Post: !isEmpty(); doesn’t change current element */
+
+void insertAtFront(ListHndl List, long data)
+{
+  NodePtr new = malloc(sizeof(NodeStruct));
+  new->data = data;
+  new->next = NULL;
+  new->prev = NULL;
+  if(isEmpty(List))
+    {
+      List->first = List->current = List->last = new;
+    }
+  else
+    {
+      new->next = List->first;
+      List->first->prev = new;
+      List->first = new;
+    }
+  List->size++;
+}
+
+/* Inserts new element after last one */
+/* Post: !isEmpty(); doesn’t change current element */
+
+void insertAtBack(ListHndl List, long data)
+{
+  NodePtr new = malloc(sizeof(NodeStruct));
+  new->data = data;
+  new->next = NULL;
+  new->prev = NULL;
+  if(isEmpty(List))
+    {
+      List->last = List->current = List->first = new;
+    }
+  else
+    {
+      new->prev = List->last;
+      List->last->next = new;
+      List->last = new;
+    }
+  List->size++;
+}
+
+/* Inserts new element before current one */
+/* Pre: !offEnd(); Post: !isEmpty(), !offEnd(), !atFirst() */
+
+void insertBeforeCurrent(ListHndl List, long data)
+{
+  assert (!offEnd(List));
+  
+  NodePtr new = malloc(sizeof(NodeStruct));
+  new->data = data;
+  new->next = NULL;
+  new->prev = NULL;
+  if(isEmpty(List))
+    {
+      List->current = List->last = List->first = new;
+    }
+  else
+    {
+      new->next = List->current;
+      List->current->prev = new;
+      List->current = new;
+    }
+  List->size++;
+}
+
+/* inserts new element in a sorted order */
+/* Pre: !offEnd(); Post: isEmpty() */
+
+void insertionSort(ListHndl List, long data)
+{
+
+  NodePtr new = malloc(sizeof(NodeStruct));
+  new->data = data;
+  new->next = NULL;
+  new->prev = NULL;
+
+  NodePtr temp = List->first;
+  while(temp != NULL)
+    {
+      if(data < temp->data)
+	{
+	  /* insertBeforeCurrent(List, data); */
+	  return;
+	}
+    }
+  insertAtBack(List, data);
+}
+
+/* delete the first element. Pre: !isEmpty() */
+
+void deleteFirst(ListHndl List)
+{
+  assert(!isEmpty(List));
+  
+  NodePtr temp = List->first;
+  List->first = List->first->next;
+  List->first->prev = NULL;
+  List->size--;
+  free(temp);
+}
+
+/* delete the last element. Pre: !isEmpty() */
+
+void deleteLast(ListHndl List)
+{
+  assert(!isEmpty(List));
+
+  NodePtr temp = List->last;
+  List->last = List->last->prev;
+  List->last->next = NULL;
+  List->size--;
+  free(temp);
+}
+
+/* delete the current element. */
+/* Pre: !isEmpty(), !offEnd(); Post: offEnd() */
+
+void deleteCurrent(ListHndl List)
+{
+  assert(!isEmpty(List));
+  assert(!offEnd(List));
+  
+  NodePtr temp = List->current;
+  if(List->current->next != NULL){
+    List->current = List->current->next;
+    List->current->next = NULL;
+    free(temp);
+  }
+  else
+    {
+      List->current = List->current->prev;
+      List->current->prev = NULL;
+      free(temp);
+    }
+  List->size--;
+}
+
+/*** Other operations ***/
+
+/* prints out the list with the */
+/* current element marked, helpful for debugging */
+
+void printList(FILE* out, ListHndl List)
+{
+  NodePtr temp = List->first;
+  while(temp != NULL)
+    {
+      printf("%lu ",temp->data);
+      temp = temp->next;
+    }
+  printf("\n");
+}
